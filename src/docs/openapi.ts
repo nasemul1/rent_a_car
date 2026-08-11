@@ -5,7 +5,7 @@ export const openapiSpec = {
     version: '1.0.0',
     description: 'REST API for vehicle rental management',
   },
-  servers: [{ url: 'http://localhost:3000' }],
+  servers: [{ url: 'http://localhost:3001' }],
   components: {
     securitySchemes: {
       cookieAuth: {

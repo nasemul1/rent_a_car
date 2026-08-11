@@ -22,12 +22,16 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
+app.get('/openapi.json', (_req, res) => {
+  res.json(openapiSpec);
+});
+
+app.use('/docs', apiReference({ spec: { url: '/openapi.json' } } as any));
+
 app.use('/auth', authRoutes);
 app.use('/vehicles', vehicleRoutes);
 app.use('/rentals', rentalRoutes);
 app.use('/reports', reportRoutes);
-
-app.use('/docs', apiReference({ spec: openapiSpec as any }));
 
 app.use(errorHandler);
 
