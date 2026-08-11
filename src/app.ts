@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { logger } from './middleware/logger';
 import { errorHandler } from './middleware/errorHandler';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(cookieParser());
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
+
+app.use('/auth', authRoutes);
 
 app.use(errorHandler);
 
