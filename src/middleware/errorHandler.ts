@@ -8,6 +8,11 @@ export function errorHandler(err: Error, _req: Request, res: Response, _next: Ne
     return;
   }
 
+  if (err.message === 'Invalid credentials') {
+    res.status(401).json({ error: 'Invalid credentials' });
+    return;
+  }
+
   if (err.message.includes('already booked')) {
     res.status(409).json({ error: err.message });
     return;
