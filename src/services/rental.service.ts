@@ -28,6 +28,8 @@ export class RentalService {
         input.vehicle_id,
         input.start_date,
         input.end_date,
+        undefined,
+        trx,
       );
 
       if (overlap) {
@@ -43,7 +45,7 @@ export class RentalService {
         ) + 1;
       const total_amount = days * Number(vehicle.daily_rate);
 
-      return rentalRepository.create({ ...input, total_amount, status: 'booked' } as any);
+      return rentalRepository.create({ ...input, total_amount, status: 'booked' } as any, trx);
     });
   }
 
@@ -63,6 +65,7 @@ export class RentalService {
         startDate,
         endDate,
         id,
+        trx,
       );
 
       if (overlap) {
@@ -82,7 +85,7 @@ export class RentalService {
         total_amount = days * Number(vehicle!.daily_rate);
       }
 
-      return rentalRepository.update(id, { ...input, total_amount } as any);
+      return rentalRepository.update(id, { ...input, total_amount } as any, trx);
     });
   }
 

@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import db from '../config/database';
 import { Rental, PaginationParams } from '../types';
 
@@ -47,8 +48,10 @@ export class RentalRepository {
     startDate: string,
     endDate: string,
     excludeId?: number,
+    trx?: Knex.Transaction,
   ): Promise<Rental | undefined> {
-    let query = db('rentals')
+    const conn = trx || db;
+    let query = conn('rentals')
       .where('vehicle_id', vehicleId)
       .whereIn('status', ['booked', 'ongoing'])
       .where('start_date', '<=', endDate)
@@ -59,13 +62,15 @@ export class RentalRepository {
     return query.first();
   }
 
-  async create(data: Partial<Rental>): Promise<Rental> {
-    const [result] = await db('rentals').insert(data).returning('*');
+  async create(data: Partial<Rental>, trx?: Knex.Transaction): Promise<Rental> {
+    const conn = trx || db;
+    const [result] = await conn('rentals').insert(data).returning('*');
     return result;
   }
 
-  async update(id: number, data: Partial<Rental>): Promise<Rental | undefined> {
-    const [result] = await db('rentals')
+  async update(id: number, data: Partial<Rental>, trx?: Knex.Transaction): Promise<Rental | undefined> {
+    const conn = trx || db;
+    const [result] = await conn('rentals')
       .where({ id })
       .update({ ...data, updated_at: new Date() })
       .returning('*');
@@ -93,11 +98,11 @@ export class RentalRepository {
         'v.name',
         db.raw('COUNT(r.id)::int AS total_bookings'),
         db.raw(
-          `SUM((EXTRACT(DAY FROM (LEAST(r.end_date, ?::date) - GREATEST(r.start_date, ?::date))) + 1))::int AS days_rented`,
+          `SUM((LEAST(r.end_date, ?::date) - GREATEST(r.start_date, ?::date) + 1))::int AS days_rented`,
           [monthEnd, monthStart],
         ),
         db.raw(
-          `SUM((EXTRACT(DAY FROM (LEAST(r.end_date, ?::date) - GREATEST(r.start_date, ?::date))) + 1) * v.daily_rate)::numeric(10,2) AS revenue`,
+          `SUM((LEAST(r.end_date, ?::date) - GREATEST(r.start_date, ?::date) + 1) * v.daily_rate)::numeric(10,2) AS revenue`,
           [monthEnd, monthStart],
         ),
       )
