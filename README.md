@@ -12,7 +12,7 @@ REST API for managing vehicle rentals, built with Node.js, TypeScript, Express, 
 3. Copy `.env.example` to `.env` and configure your database credentials
 4. Start PostgreSQL:
    ```bash
-   docker-compose up -d db
+   docker-compose up -d
    ```
 5. Run migrations and seed data:
    ```bash
