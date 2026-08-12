@@ -1,13 +1,9 @@
 import request from 'supertest';
 import app from '../../src/app';
-import { setupTestDb, teardownTestDb } from '../helpers';
+import { setupTestDb } from '../helpers';
 
 beforeAll(async () => {
   await setupTestDb();
-});
-
-afterAll(async () => {
-  await teardownTestDb();
 });
 
 describe('Auth Endpoints', () => {

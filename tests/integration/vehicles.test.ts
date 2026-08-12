@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../../src/app';
-import { setupTestDb, teardownTestDb } from '../helpers';
+import { setupTestDb } from '../helpers';
 
 let cookie: string;
 
@@ -10,10 +10,6 @@ beforeAll(async () => {
     .post('/auth/login')
     .send({ email: 'admin@rental.com', password: 'password123' });
   cookie = loginRes.headers['set-cookie'];
-});
-
-afterAll(async () => {
-  await teardownTestDb();
 });
 
 describe('Vehicle Endpoints', () => {
